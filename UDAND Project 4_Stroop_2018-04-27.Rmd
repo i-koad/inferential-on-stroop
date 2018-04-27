@@ -1,0 +1,387 @@
+---
+title: "Investigate the Stroop Effect"
+subtitle: A Project for Inferential Statistics
+---
+```{r echo=FALSE}
+# Change echo to FALSE when knitting to HTML for submmission.
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+```
+
+## Abstract
+This project paper has been prepared under Udacity's Inferential Statistics 
+course. The project calls for investigating the [Stroop Effect](https://en.wikipedia.org/wiki/Stroop_effect) by statistically 
+examining results from a sample of participants.
+
+A hypothesis regarding the outcome of the task will be proposed and tested 
+against the data set.
+
+***
+
+```{r Packages, echo=FALSE, message=FALSE, warning=FALSE,}
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+
+```
+
+
+## Variables
+
+The dependent variable is the time taken to complete each test, while the 
+independent variable is the words condition (congruent or incongruent).
+
+***
+
+## Hypotheses
+
+The null hypothesis is that the time taken to complete the 
+congruent test is the same as that taken for the incongruent test. 
+
+The alternative hypothesis proposes that the time taken to complete the two 
+tests are different.
+
+The hypotheses can be symbolized as follows:
+
+$H_0: \mu_{inc} = \mu_{con}$ 
+
+$H_A: \mu_{inc} \neq \mu_{con}$
+
+where,
+
+$\mu_{inc}$ is the sample mean for Inconguent words condition task,  
+$\mu_{con}$ is the sample mean for Congruent words condition task.
+
+The statistical test will be a dependent t-test for paired samples since the 
+samples are drawn from the same population.
+
+I will use 2-tailed t-critical values in order to fit the 
+alternative hypothesis which is non-directional (i.e. $\mu_{inc}$ could either 
+increase or decrease in relation to $\mu_{con}$).
+
+The significance level, i.e. alpha is set at 0.05.
+
+I will also examine the sample's *Cohen's d* to evaluate the effect 
+size.
+
+#### My Experience with Stroop Task
+The Stroop task testing comprises calling out the name of colour used to mark 
+each word, and timing the duration taken to complete naming the colours for a 
+fixed quantity of words.
+
+The test starts with congruent words condition before finishing with the 
+incongruent words condition.
+
+I took longer to complete the task with incongruent words condition. Did other 
+participants experience the same?
+
+***
+
+## Descriptive Statistics
+
+```{r Load the data, echo=FALSE}
+setwd("~/UDAND/Proj 4_Stroop Test/")
+sp <- read.csv("stroopdata.csv")
+
+str(sp)
+```
+
+The dataset contains time entries for 24 participants, i.e. sample size is 24.
+
+#### Central Tendency
+
+```{r}
+summary(sp)
+```
+
+So, it appears other participants in the sample had the same experience - 
+the measures of central tendency (median and mean) for Incongruent are higher 
+than the Congruent values. On average, the Incongruent task took almost 
+8 seconds longer to complete than its counterpart.
+
+#### Variability
+
+```{r}
+sp %>% summarise(IQR_cgrt = IQR(sp$Congruent), 
+                 IQR_incgrt = IQR(sp$Incongruent), 
+                 var_cgrt = var(sp$Congruent), 
+                 var_incgrt = var(sp$Incongruent), 
+                 stdev_cgrt = sd(sp$Congruent), 
+                 stdev_incgrt = sd(sp$Incongruent))
+```
+
+Abbr. | Meaning
+---|---
+IQR | Inter-quartile Range
+var | Variance
+stdev | Standard Deviation
+cgrt | Congruent words condition 
+incgrt | Incongruent words condition
+
+
+Incongruent words condition task in the sample results has a larger spread 
+(variability) - all three measures of variability in the sample indicate 
+longer duration (seconds) compared to Congruent task.
+
+***
+
+## Visualizations
+
+```{r}
+sp_melt <- melt(sp, 
+                variable.name = "words_cond", 
+                value.name = "time")
+```
+
+```{r Histogram faceted by words condition type, fig.width=5, fig.height=3}
+ggplot(data = sp_melt, aes(x = time)) + 
+  geom_histogram(binwidth = 2) +
+  facet_wrap(~ words_cond, ncol = 1) +
+  xlab("Task completion time (s)") +
+  ylab("Number of participants") + 
+  ggtitle("Stroop Task")
+
+```
+
+The histogram plot for Congruent task approximates to a normal distribution. 
+On the other hand, the Incongruent task histogram suggests a positively skewed 
+distribution. 
+
+The normal distribution for Congruent task seems to represent a collection of 
+the candidates that have a spread of reaction time and literacy prowess. Both 
+these capabilities can be improved with practice to reduce the task 
+completion time. I expect this to be the distribution too if an entire literate population took the test on Congruent words condition.
+
+However, the skewed distribution observed in the Incongruent task suggests 
+that this test is an "equalizer" in the sense that even the more quick to read 
+and react could not reduce the completion time beyond a floor value 
+(~ 18 seconds).
+
+
+```{r Boxplot, fig.width=5, fig.height=3}
+ggplot(data = sp_melt, aes(x = words_cond, y = time)) + 
+  geom_boxplot() +
+  xlab("Words Condition Type") +
+  ylab("Task completion time (s)") + 
+  ggtitle("Stroop Task")
+```
+
+The plots illustrate a clear difference in completion time between the
+tasks with differing words condition - Incongruent words condition tasks take 
+a longer time to complete compared to tasks with Congruent words condition.
+
+An interesting observation is that the Congruent boxplot's median line lies in 
+the upper half of the "box" in the dataset suggesting that notable handful 
+of individuals (i.e. 25% of samples) in the dataset that could complete the task faster. Contrast this with the median line of the Incongruent boxplot which 
+lies in the middle of the "box" - suggesting that the previously quick 
+individuals could not do notably better in completing the Incongruent task as 
+they did in the Congruent task.
+
+```{r Remove outliers, fig.width=5, fig.height=3}
+not_slow_melt <- melt(subset(sp, Incongruent < 30), 
+                      variable.name = "words_cond", 
+                      value.name = "time")
+ggplot(data = not_slow_melt, aes(x = words_cond, y = time)) + 
+  geom_boxplot() +
+  xlab("Words Condition Type") +
+  ylab("Task completion time (s)") + 
+  ggtitle("Stroop Task")
+```
+
+By filtering away the slowest participants from the dataset (i.e. completion 
+time exceeding 30 seconds), we can see a more striking difference in the 
+performance of "quick" individuals between the two tasks. 
+
+So, how did each individual do between the 2 tasks?  
+
+```{r Scatterplot, fig.width=5, fig.height=3}
+ggplot(data = sp, aes(x = Congruent, y = Incongruent)) + 
+  geom_point() +
+  ggtitle("Incongruent over Congruent") + 
+  xlab("Congruent task (seconds)") +
+  ylab("Incongruent task (seconds)")
+```
+
+There is a correlation between the time taken for the Congruent and Incongruent 
+tasks.
+
+Surprisingly, the individuals who took the longer time (> 30s) to finish the 
+Incongruent task were not the slower indivdiuals in the Congruent task. 
+
+Let's filter these individuals out, and re-plot with a fitted line.
+
+```{r Scatterplot filtered, fig.width=5, fig.height=3}
+ggplot(data = subset(sp, Incongruent < 30), 
+       aes(x = Congruent, y = Incongruent)) + 
+  geom_point() +
+  geom_smooth(method = "lm") + 
+  scale_x_continuous(breaks = seq(0, 24, 4)) +
+  scale_y_continuous(breaks = seq(10, 30, 4)) +
+  ggtitle("Incongruent over Congruent") + 
+  xlab("Congruent task (seconds)") +
+  ylab("Incongruent task (seconds)")
+```
+
+```{r Correlation}
+with(subset(sp, Incongruent < 30), 
+     cor(x = Congruent, y = Incongruent))
+```
+
+A weak to moderate correlation of 0.47 between the times taken to complete 
+the 2 tasks. In other words, almost half of the variation in 
+Incongruent task completion time can be explained by the variation in 
+Congruent task completion time.
+
+***
+
+## Statistical Testing
+Recall that the hypotheses are as follows:  
+
+$H_0: \mu_{inc} = \mu_{con}$  
+
+$H_A: \mu_{inc} \neq \mu_{con}$
+
+To establish if we should reject the null or if we fail to reject the null, 
+we take the following steps:
+
+##### 1. Establish the sample size
+
+```{r}
+(n <- length(sp$Incongruent)
+ )
+```
+
+$n = 24$  
+
+##### 2. Establish the mean difference  
+$\mu_d = \mu_{inc} - \mu_{con}$
+
+```{r}
+(mean_diff <- with(sp, mean(Incongruent) - mean(Congruent))
+ )
+```
+
+$\mu_d = 7.96$
+
+##### 3. Establish standard deviation of difference  
+$S_d = \sqrt{\frac{\sum{(d_i - \mu_d)^2}}{n-1}}$  
+$\text{ ,where } d_i \text{ is the difference for pair } i$
+
+```{r Standard Deviation of Difference}
+# Difference for pairs
+sp$diff <- with(sp, Incongruent - Congruent)
+
+sp$deviate_mean_2 <- with(sp, (diff - mean_diff)^2
+                               )
+
+# Std deviation of difference
+(SD_diff <- sqrt(sum(sp$deviate_mean_2) / (n - 1))
+  )
+
+```
+
+$S_d = 4.86$
+
+##### 4. Establish the standard error of mean (SE)  
+
+$\text{SE} = \frac{S_d}{\sqrt{n}}$
+
+```{r}
+(SE <- SD_diff/sqrt(n))
+```
+
+$\text{SE} = 0.99$
+
+##### 5. Establish the t-statistics  
+t-statistics = $\frac{\mu_d}{\text{SE}}$
+
+```{r}
+(t <- mean_diff / SE)
+```
+
+t-statistics = 8.02
+
+##### 6. Degree of freedom based on dependent t-test of paired samples
+d.f. = n - 1 = 23
+
+##### 7. Establish the 2-tailed t-critical value based on alpha of 0.05  
+```{r}
+(t_critical <- qt(1-0.05/2, 23)
+ )
+```
+
+t-critical(23) = $\pm2.069, p<.025$
+
+***
+
+##### 8. Test results
+
+We can see that t-statistics (8.02) lies beyond the t-critical value 
+(+/- 2.069). Thus, we can reject the null hypothesis. 
+
+***
+
+#### 95% Confidence Intervals of Mean Difference between the 2 Words Conditions
+
+Establishing the Margin of Error using 2-tailed t-test with alpha of 0.05. 
+
+Margin of Error = t~critical~ x SE
+
+```{r}
+(MoErr <- t_critical * SE
+ )
+```
+
+Margin of Error = 2.05
+
+Hence, the 95% confidence intervals for the difference in time (seconds) taken 
+to complete the Congruent and Incongruent words condition tasks are:
+
+```{r}
+mean_diff - MoErr
+mean_diff + MoErr
+```
+
+95% CI [5.91, 10.02].
+
+***
+
+## Effect Size
+
+*Cohen's d* is derived by the following formula:  
+
+$\text{Cohen's d} = \frac{\mu_i - \mu_c}{S_d} = \frac{\mu_d}{S_d}$
+
+```{r}
+mean_diff / SD_diff
+```
+
+$\text{Cohen's d} = 1.64$
+
+The distance between means is more than 0.8 standardized unit away from one 
+another which represents a large effect size.
+
+***
+
+## Conclusion
+
+Based on t-test result, we can reject the null hypothesis to accept that 
+the alternate hypothesis has statistical significance. 
+
+*Cohen's d* value indicates that there is meaningful effect size in the mean difference.
+
+The result matches with observations made through the histograms and boxplots 
+illustrating the difference in time taken for the 2 task types.
+
+#### Further Thoughts
+
+The Stroop effect is theorized to be the manifestation of a race condition in 
+the brain where both relevant (i.e. actual colour used on the word) and 
+irrelevant (i.e. the word with name of colour) information are processed in 
+parallel, but race to enter the processing centre of the brain when a response 
+(i.e. when verbalizing the colour's name) made.
+
+Multi-tasking could result in similar effect. For instance, individuals 
+attempting to drive a vehicle while engaging in a conversation on a cellular 
+phone might actually be responding slower to inputs from either task, thus 
+compromising on road safety and simultaneously coming across as inattentive or 
+uninterested to the caller on the other line. 
