@@ -25,3 +25,12 @@ http://www.statisticshowto.com/probability-and-statistics/hypothesis-testing/t-s
 
 Dependent T-Test using SPSS Statistics
 https://statistics.laerd.com/spss-tutorials/dependent-t-test-using-spss-statistics.php
+
+Statistics/Testing Data/t-tests
+https://en.wikibooks.org/wiki/Statistics/Testing_Data/t-tests
+
+The Assumption(s) of Normality
+http://www2.psychology.uiowa.edu/faculty/mordkoff/GradStats/part%201/I.07%20normal.pdf
+
+Paired t- test
+http://influentialpoints.com/Training/paired_t-test-principles-properties-assumptions.htm
