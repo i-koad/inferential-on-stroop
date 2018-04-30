@@ -63,15 +63,25 @@ $H_A: \mu_{inc} \neq \mu_{con}$
 
 where,
 
-$\mu_{inc}$ is the sample mean for Inconguent words condition task,  
-$\mu_{con}$ is the sample mean for Congruent words condition task.
+$\mu_{inc}$ is the population mean for Inconguent words condition task,  
+$\mu_{con}$ is the population mean for Congruent words condition task.
 
 The statistical test will be a dependent t-test for paired samples: 
 
 1. t-test is chosen (as opposed to z-test) since there is no information on the population's standard deviation, and no means to derive the information. 
 
 2. Dependent t-test is proposed (as opposed to independent t-test) since the 
-resulting times are drawn from the same population. 
+resulting times are drawn from the same population.
+
+Several assumptions are made in order to use t-test on the samples provided by 
+the dataset:
+
+1. samples from the dataset have been randomly drawn from the population
+
+2. pairs of observations (i.e. the pair of duration taken to name ink colour of 
+congruent and incongruent words) are independent
+
+3. the distribution of the mean difference is normal
 
 I will use 2-tailed t-critical values in order to fit the 
 alternative hypothesis which is non-directional (i.e. $\mu_{inc}$ could either 
@@ -384,7 +394,11 @@ another which represents a large effect size.
 ## Conclusion
 
 Based on t-test result, we can reject the null hypothesis to accept that 
-the alternate hypothesis has statistical significance. 
+the alternate hypothesis has statistical significance.
+
+Simply put, the t-test result indicates that any individual taking the Stroop 
+test are likely to take different times in naming the ink colour of congruent 
+versus incongruent words.
 
 *Cohen's d* value indicates that there is meaningful effect size in the mean difference.
 
