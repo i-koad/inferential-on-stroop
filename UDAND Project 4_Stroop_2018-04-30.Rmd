@@ -45,7 +45,7 @@ With no information on the population parameters, the set of hypotheses and the
 corresponding statistical analysis will be based on sample testing in order 
 to make inferences about the population. 
 
-In this case, I am attempting to analyze if there is a difference in time  
+In this case, I am attempting to analyze if there is a difference in time 
 to call out the ink colour of Incongruent and Congruent words.
 
 Hence, the null hypothesis is that the time taken to name the ink colour of 
