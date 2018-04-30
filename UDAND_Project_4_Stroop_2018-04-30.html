@@ -150,12 +150,18 @@ $(document).ready(function () {
 <p><span class="math inline">\(H_0: \mu_{inc} = \mu_{con}\)</span></p>
 <p><span class="math inline">\(H_A: \mu_{inc} \neq \mu_{con}\)</span></p>
 <p>where,</p>
-<p><span class="math inline">\(\mu_{inc}\)</span> is the sample mean for Inconguent words condition task,<br />
-<span class="math inline">\(\mu_{con}\)</span> is the sample mean for Congruent words condition task.</p>
+<p><span class="math inline">\(\mu_{inc}\)</span> is the population mean for Inconguent words condition task,<br />
+<span class="math inline">\(\mu_{con}\)</span> is the population mean for Congruent words condition task.</p>
 <p>The statistical test will be a dependent t-test for paired samples:</p>
 <ol style="list-style-type: decimal">
 <li><p>t-test is chosen (as opposed to z-test) since there is no information on the population’s standard deviation, and no means to derive the information.</p></li>
 <li><p>Dependent t-test is proposed (as opposed to independent t-test) since the resulting times are drawn from the same population.</p></li>
+</ol>
+<p>Several assumptions are made in order to use t-test on the samples provided by the dataset:</p>
+<ol style="list-style-type: decimal">
+<li><p>samples from the dataset have been randomly drawn from the population</p></li>
+<li><p>pairs of observations (i.e. the pair of duration taken to name ink colour of congruent and incongruent words) are independent</p></li>
+<li><p>the distribution of the mean difference is normal</p></li>
 </ol>
 <p>I will use 2-tailed t-critical values in order to fit the alternative hypothesis which is non-directional (i.e. <span class="math inline">\(\mu_{inc}\)</span> could either increase or decrease in relation to <span class="math inline">\(\mu_{con}\)</span>).</p>
 <p>The significance level, i.e. alpha is set at 0.05.</p>
@@ -320,6 +326,7 @@ $(document).ready(function () {
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
 <p>Based on t-test result, we can reject the null hypothesis to accept that the alternate hypothesis has statistical significance.</p>
+<p>Simply put, the t-test result indicates that any individual taking the Stroop test are likely to take different times in naming the ink colour of congruent versus incongruent words.</p>
 <p><em>Cohen’s d</em> value indicates that there is meaningful effect size in the mean difference.</p>
 <p>The result matches with observations made through the histograms and boxplots illustrating the difference in time taken for the 2 task types.</p>
 <div id="further-thoughts" class="section level4">
