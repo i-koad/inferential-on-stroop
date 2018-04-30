@@ -1,0 +1,27 @@
+
+Using Greek Letters in RMarkdown
+https://rpubs.com/davidpassmore/213041
+
+Wikibooks LaTeX/Mathematics
+https://en.wikibooks.org/wiki/LaTeX/Mathematics
+
+Critical t values in R
+https://stackoverflow.com/questions/11526041/critical-t-values-in-r
+
+In R, what is the difference between dt(), pt(), and qt(), in reference to the student t distribution?
+https://www.quora.com/In-R-what-is-the-difference-between-dt-pt-and-qt-in-reference-to-the-student-t-distribution
+
+Reporting Statistics in APA Style
+https://my.ilstu.edu/~jhkahn/apastats.htmls
+
+Hypothesis Test: Difference Between Paired Means
+http://stattrek.com/hypothesis-test/paired-means.aspx?Tutorial=AP
+
+The Coefficient of Determination, r-squared (Interpretation of r-squared)
+https://onlinecourses.science.psu.edu/stat501/node/255
+
+T-Score vs. Z-Score: What’s the Difference? 
+http://www.statisticshowto.com/probability-and-statistics/hypothesis-testing/t-score-vs-z-score/
+
+Dependent T-Test using SPSS Statistics
+https://statistics.laerd.com/spss-tutorials/dependent-t-test-using-spss-statistics.php
